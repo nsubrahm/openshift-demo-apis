@@ -1,0 +1,166 @@
+openapi: 3.0.1
+info:
+  title: Customer Management - Demo for Medium
+  description: "This document covers APIs to demonstrate the manipulation of customers in a data store."
+  contact:
+    email: mrchainhead@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: openshift
+    description: Everything about RedHat OpenShift
+    externalDocs:
+      description: Find out more
+      url: https://www.openshift.com/
+  - name: okd
+    description: Origin distribution of Kubernetes
+    externalDocs:
+      description: Find out more
+      url: https://www.okd.io/
+  - name: minishift
+    description: Develop Applications Locally in a Containerized OKD Cluster
+    externalDocs:
+      description: Find out more
+      url: https://www.okd.io/minishift/
+paths:
+  /customers:
+    post:
+      tags:
+        - customers
+      summary: Add a new customer
+      operationId: addCustomer
+      requestBody:
+        description: Customer object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+        required: true
+      responses:
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        201:
+          description: Customer added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /customer/{customerId}:
+    get:
+      tags:
+        - customer
+      summary: Find customer by ID
+      description: Returns a single customer
+      operationId: getCustomerById
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        404:
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - customer
+      summary: Update an existing customer
+      operationId: editCustomerById
+      requestBody:
+        description: Customer object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+        required: true
+      parameters:
+        - name: customerId
+          in: path
+          description: Customer id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        404:
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    delete:
+      tags:
+        - customer
+      summary: Deletes a customer
+      operationId: deleteCustomer
+      parameters:
+        - name: api_key
+          in: header
+          schema:
+            type: string
+        - name: customerId
+          in: path
+          description: Customer id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        404:
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+components:
+  schemas:
+    Customer:
+      required:
+        - name
+        - address
+      type: object
+      properties:
+        name:
+          type: string
+          example: ACME Super Hero
+        address:
+          type: string
+          example: MTP, ಹೆಬ್ಬಾಳ, Bengaluru, INDIA.
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
